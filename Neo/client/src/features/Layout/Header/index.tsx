@@ -228,7 +228,7 @@ export const Header = () => {
                       </li>
                       <li>
                         <Link
-                          href="/home2"
+                          href="/appointment"
                           className="inline-flex text-[#1c1c1c] text-[14px] font-medium tracking-[0.1rem]"
                         >
                           Book An Appointment

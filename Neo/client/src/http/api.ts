@@ -1,3 +1,4 @@
+import { IForm } from "@/features/Appointment/themplates";
 import axios from "axios";
 
 const api = axios.create({
@@ -6,23 +7,23 @@ const api = axios.create({
 })
 
 if (typeof window !== "undefined") {
-  const token = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("token="));
+    const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("token="));
 
-  console.log("Token from cookie (client only):", token);
+    console.log("Token from cookie (client only):", token);
 
-  api.interceptors.request.use(
-    (config) => {
-      if (token) {
-        config.headers["Authorization"] = `Bearer ${token.split("=")[1]}`;
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
+    api.interceptors.request.use(
+        (config) => {
+            if (token) {
+                config.headers["Authorization"] = `Bearer ${token.split("=")[1]}`;
+            }
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
 }
 
 
@@ -54,7 +55,7 @@ export const postApi = async (url: string, data: any) => {
 
 
 
-const BASE_URL = "http://localhost:3001/api"; 
+const BASE_URL = "http://localhost:3001/api";
 
 export const deleteApi = async (url: string) => {
     const fullUrl = `${BASE_URL}${url}`;
@@ -142,3 +143,11 @@ export const patchOrderApi = async (url: string, data: any) => {
 }
 
 
+export const addAppointment = async (url: string, data: IForm) => {
+    try {
+        const response = await api.post(`${url}`, data);
+        return response.data
+    } catch (error) {
+        throw error;
+    }
+}

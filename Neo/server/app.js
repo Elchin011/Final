@@ -24,7 +24,7 @@ app.use(cors({
 const PORT=3001
 ConnectDb()
 
-app.use("/api/auth",AuthRouter)
+app.use("xw",AuthRouter)
 app.use("/api",ProductsRouter)
 app.use("/api/persons", PersonRouter)
 app.use("/api/service-levels", ServiceLevelsRouter); 

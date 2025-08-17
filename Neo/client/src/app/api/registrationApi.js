@@ -17,3 +17,4 @@ export const approvePatient = async (id) => {
 export const rejectPatient = async (id) => {
   return await axios.patch(`${API_URL}/${id}`, { status: "rejected" });
 };
+
