@@ -16,12 +16,14 @@ export const ProductCard = ({
   price,
   catgerires,
   addToCart,
+  id,
 }: {
   img: string;
   price: number;
   name: string;
   addToCart: () => void;
   catgerires?: { name: string };
+  id: string;
 }) => {
   const [hovered, setHovered] = useState(false);
   const [open, setOpen] = useState(false); // dialog açılma statusu
@@ -41,6 +43,7 @@ export const ProductCard = ({
               alt="Product"
               className="w-full h-full absolute inset-0 object-cover"
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
           <div className="pt-10 pb-8 text-center relative">
@@ -100,6 +103,7 @@ export const ProductCard = ({
         name={name}
         price={price}
         addToCart={addToCart}
+        id={id}
       />
     </>
   );

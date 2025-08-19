@@ -16,8 +16,8 @@ router.delete("/:id", deletePerson);
 
 
 
-router.get("/persons/specialties", getAllSpecialties);
-router.post("/persons/create/specialty", createPersonSpecialty);
-router.delete("/persons/specialties/:id", deletePersonSpecialty);
+router.get("/specialties", getAllSpecialties);
+router.post("/create/specialty", createPersonSpecialty);
+router.delete("/specialties/:id", deletePersonSpecialty);
 
 module.exports = router;

@@ -145,7 +145,7 @@ const ProductCategoryList = () => {
 
                             <Button
                                 disabled={isPending}
-                                className='my-4 w-full'
+                                className='my-4 py-3 rounded-md w-full'
                                 type='submit'
                             >
                                 {isPending ? "Creating..." : "Create"}

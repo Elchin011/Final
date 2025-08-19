@@ -1,7 +1,7 @@
 const monngoose=require("mongoose")
 
 function ConnectDb() {
-  const dbUrl = process.env.DB_URL
+  const dbUrl = process.env.MONGO_URI
 
   monngoose.connect(dbUrl, {
   })

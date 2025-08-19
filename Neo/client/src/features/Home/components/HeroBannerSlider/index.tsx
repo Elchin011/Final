@@ -120,9 +120,9 @@ const HeroBannerSlider = () => {
             </div>
             <div className='lg:hidden'>
                 <div className='relative'>
-                    <img src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/10/main-rev-img1.jpg" alt="" />
-                    <div className='absolute top-145 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center bg-white p-14'>
-                        <div className='w-[224px] h-[261px]'>
+                    <img className='object-cover' src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/10/main-rev-img1.jpg" alt="" />
+                    <div className='absolute top-70 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center bg-white p-14'>
+                        <div className='w-[224px] h-[392px]'>
                             <img className='w-full h-full  object-cover' src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/08/main-home-rev-img-19.png" alt="" />
                         </div>
                         <div className='mt-8'>

@@ -1,10 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+
 import { useCart } from "@/Providers/CartProvider";
 import { Minus, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { loadStripe } from "@stripe/stripe-js";
+import { Button } from "@/components/ui/button";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -22,39 +23,39 @@ export default function CartPage() {
   const data = getCartItems();
 
 
-  const handleCheckout = async () => {
-    const stripe = await stripePromise;
-    if (!stripe) {
-      console.error("Stripe not loaded");
-      return;
-    }
-    const response = await fetch("/api/checkout-sessions/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        cartItems: data.map((item: any) => ({
-          name: item.name,
-          image: item.imageUrl,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-        returnUrl: window.location.origin,
-      }),
-    });
-    if (!response.ok) {
-      console.error("Failed to create checkout session");
-      return;
-    }
-    const session = await response.json();
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.sessionId,
-    });
-    if (result.error) {
-      console.error("Stripe checkout error:", result.error.message);
-    }
-  };
+  // const handleCheckout = async () => {
+  //   const stripe = await stripePromise;
+  //   if (!stripe) {
+  //     console.error("Stripe not loaded");
+  //     return;
+  //   }
+  //   const response = await fetch("/api/checkout-sessions/create", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       cartItems: data.map((item: any) => ({
+  //         name: item.name,
+  //         image: item.imageUrl,
+  //         price: item.price,
+  //         quantity: item.quantity,
+  //       })),
+  //       returnUrl: window.location.origin,
+  //     }),
+  //   });
+  //   if (!response.ok) {
+  //     console.error("Failed to create checkout session");
+  //     return;
+  //   }
+  //   const session = await response.json();
+  //   const result = await stripe.redirectToCheckout({
+  //     sessionId: session.sessionId,
+  //   });
+  //   if (result.error) {
+  //     console.error("Stripe checkout error:", result.error.message);
+  //   }
+  // };
 
   return (
     <div>
@@ -74,7 +75,7 @@ export default function CartPage() {
 
         </div>
         <div className="container mx-auto">
-          <div className="py-14">
+          <div className="pt-14 pb-35">
             <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
               {/* Sebet Məhsulları */}
               <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
@@ -175,6 +176,35 @@ export default function CartPage() {
                             </div>
                           </div>
                         ))}
+                      <div className="mt-20 w-full">
+                        <h3 className="text-[30px] tracking-[0.3px] dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800 uppercase mb-7.5">
+                          Cart Totals
+                        </h3>
+                        <div className="flex items-center gap-40 py-9 border-b border-gray-200 w-full">
+                          <h4 className="text-[17px] font-semibold uppercase tracking-[0.34px]">Subtotal</h4>
+                          <p className="text-[16px] text-[#565656] dark:text-white">
+                            {Array.isArray(data) && data.length > 0
+                              ? `$${data.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0).toFixed(2)}`
+                              : "$0.00"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-49 py-9 border-b border-gray-200 mb-20">
+                          <h4 className="text-[17px] font-semibold uppercase tracking-[0.34px]">Total</h4>
+                          <p className="text-[16px] text-[#565656] dark:text-white">
+                            {Array.isArray(data) && data.length > 0
+                              ? `$${data.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0).toFixed(2)}`
+                              : "$0.00"}
+                          </p>
+                        </div>
+
+                        <Link
+                          href="/checkout"
+                          className="text-[12px] py-5 px-8.5 bg-white text-black font-medium uppercase tracking-[1.95px] border border-black hover:bg-black hover:text-white duration-500"
+                        >
+                          Proceed to Checkout
+                        </Link>
+
+                      </div>
                     </>
                   ) : (
                     <div className="flex flex-col items-center justify-center w-full h-64">
@@ -195,38 +225,47 @@ export default function CartPage() {
               </div>
             </div>
           </div>
-          <div>
-            <h3 className="text-[30px] tracking-[0.3px] dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800 uppercase mb-7.5">
-              Cart Totals
-            </h3>
-            <div className="flex items-center gap-40 py-9 border-b border-gray-200">
-              <h4 className="text-[17px] font-semibold uppercase tracking-[0.34px]">Subtotal</h4>
-              <p className="text-[16px] text-[#565656] dark:text-white">
-                {Array.isArray(data) && data.length > 0
-                  ? `$${data.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0).toFixed(2)}`
-                  : "$0.00"}
-              </p>
+        </div>
+        <div className='bg-[#f9f9f9] py-18 px-9 lg:px-0'>
+          <div className='container mx-auto text-center'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:gap-10 gap-2'>
+              <div className='flex gap-3 items-center'>
+                <div className='pt-6'>
+                  <img className='h-[46px]' src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-01.png" alt="" />
+                </div>
+                <div className='text-left'>
+                  <h4 className='uppercase mt-7 text-[15px] font-semibold text-[#606060] tracking-[1px]'>Free shipping 100$</h4>
+                  <p className='text-[16px] text-[#565656]'>Lorem ipsum dolor in</p>
+                </div>
+              </div>
+              <div className='flex gap-3 items-center'>
+                <div className='pt-6'>
+                  <img className='h-[46px]' src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-02.png" alt="" />
+                </div>
+                <div className='text-left'>
+                  <h4 className='uppercase mt-7 text-[15px] font-semibold text-[#606060] tracking-[1px]'>Helpdesk center</h4>
+                  <p className='text-[16px] text-[#565656]'>Nunc amet volutpat sed</p>
+                </div>
+              </div>
+              <div className='flex gap-3 items-center'>
+                <div className='pt-6'>
+                  <img className='h-[46px]' src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-03.png" alt="" />
+                </div>
+                <div className='text-left'>
+                  <h4 className='uppercase mt-7 text-[15px] font-semibold text-[#606060] tracking-[1px]'>60 days to try out</h4>
+                  <p className='text-[16px] text-[#565656]'>Sit amet placerat do</p>
+                </div>
+              </div>
+              <div className='flex gap-3 items-center'>
+                <div className='pt-6'>
+                  <img className='h-[46px]' src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-04.png" alt="" />
+                </div>
+                <div className='text-left'>
+                  <h4 className='uppercase mt-7 text-[15px] font-semibold text-[#606060] tracking-[1px]'>100% safe payment</h4>
+                  <p className='text-[16px] text-[#565656]'>Non tellus orci auctor</p>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-49 py-9 border-b border-gray-200">
-              <h4 className="text-[17px] font-semibold uppercase tracking-[0.34px]">Total</h4>
-              <p className="text-[16px] text-[#565656] dark:text-white">
-                {Array.isArray(data) && data.length > 0
-                  ? `$${data.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0).toFixed(2)}`
-                  : "$0.00"}
-              </p>
-            </div>
-            <Button
-              onClick={handleCheckout}
-              className="text-[12px] mt-7.5 py-3.5 px-8.5 bg-white text-black font-medium uppercase tracking-[1.95px] border border-black hover:bg-black hover:text-white duration-500"
-            >
-              Proceed to Checkout
-            </Button>
-            <Link
-              href="/checkout"
-              className="mt-6 px-4 md:mt-0 dark:border-white dark:hover:bg-gray-900 dark:bg-transparent dark:text-white py-5 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800  w-96 2xl:w-full text-base font-medium leading-4 text-gray-800"
-            >
-              Checkout
-            </Link>
           </div>
         </div>
       </div>

@@ -102,7 +102,7 @@ const ProductColorsList = () => {
         <div>
             <div className='flex items-center my-5 justify-between'>
                 <h1 className='text-3xl font-bold text-gray-800'>
-                    Products Size Lists
+                    Products Color Lists
                 </h1>
                 <Button
                     onClick={() => {
@@ -119,7 +119,7 @@ const ProductColorsList = () => {
                 openAddcolorDialog && <CommonDialog open={openAddcolorDialog} onClose={() => {
                     setOpenAddcolorDialog(false)
                 }}
-                    title='add Color' desc='color'>
+                    title='Add Color'>
                     <form
                         onSubmit={(e: any) => {
                             e.preventDefault()
@@ -146,7 +146,7 @@ const ProductColorsList = () => {
                                 </div> : null
                             }
                         </div>
-                        <div>
+                        <div className='mt-4'>
                             <Label className='mb-2' htmlFor='code'>Color code</Label>
                             <Input
                                 onChange={formik.handleChange}
@@ -161,7 +161,7 @@ const ProductColorsList = () => {
                         </div>
                         <Button
                             disabled={isPending}
-                            className='my-4 w-full' type='submit'>
+                            className='my-4 py-3 rounded-md w-full' type='submit'>
 
                             {
                                 isPending ? "creating..." : "Create"

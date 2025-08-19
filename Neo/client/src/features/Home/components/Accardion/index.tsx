@@ -58,11 +58,12 @@ export default function ControlledAccordions() {
                     </Typography>
                 </CustomAccordionSummary>
                 <AccordionDetails>
-                    <Typography>
-                        <div className='text-[16px] text-[#868686] pl-7.5'>
+                    <AccordionDetails>
+                        <Typography component="div" className='text-[16px] text-[#868686] pl-7.5'>
                             Nullam vitae eros nisi. Vestibulum non purus vitae massa mollis sagittis vesti bulum.
-                        </div>
-                    </Typography>
+                        </Typography>
+                    </AccordionDetails>
+
                 </AccordionDetails>
             </Accordion>
 
@@ -81,11 +82,12 @@ export default function ControlledAccordions() {
                     </Typography>
                 </CustomAccordionSummary>
                 <AccordionDetails>
-                    <Typography>
-                        <div className='text-[16px] text-[#868686] pl-7.5'>
+                    <AccordionDetails>
+                        <Typography component="div" className='text-[16px] text-[#868686] pl-7.5'>
                             Nullam vitae eros nisi. Vestibulum non purus vitae massa mollis sagittis vesti bulum.
-                        </div>
-                    </Typography>
+                        </Typography>
+                    </AccordionDetails>
+
                 </AccordionDetails>
             </Accordion>
         </div>

@@ -48,20 +48,37 @@ const page = () => {
           {data && data?.data?.length > 0 ? (
             data?.data.map((order: any) => (
               <div key={order._id} className="mb-4 p-4 border rounded-md">
-                <h2 className="text-xl font-semibold">
+                <h2 className="text-[20px] font-semibold">
                   Order ID: {order._id}
                 </h2>
-                <p>Total Amount: {order.totalAmount} $</p>
-                <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                <li className="list-none">
+                  <strong>Customer Name:</strong> {order.firstName} {order.lastname}
+                </li>
+                <li className="list-none">
+                  <strong>Customer Email:</strong> {order.email}
+                </li>
+                <li className="list-none">
+                  <strong>Customer Phone:</strong> {order.phone}
+                </li>
+                <li className="list-none">
+                  <strong>Total Amount:</strong> {order.totalAmount} $
+                </li>
+                <li className="list-none">
+                  <strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()}
+                </li>
+                <li className="list-none">
+                  <strong>Address:</strong> {order.address}
+                </li>
                 <ul>
+                  <li>
+                    <strong>Product:</strong>
+                  </li>
                   {order.products.map((item: any, index: number) => (
                     console.log(item.product),
                     <li key={item.product?._id || item.product?.id || item.id || index}>
                       {item.product?.name || "Unknown Product"} - {item.quantity} pcs
                     </li>
                   ))}
-
-
                 </ul>
                 <Button className={`mt-2 px-5 py-2 rounded-md ${OrderStatus(order.status)}`}>
                   {order?.status}

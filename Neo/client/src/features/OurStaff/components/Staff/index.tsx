@@ -35,7 +35,7 @@ const Staff = () => {
             data?.data?.slice(0, 2).map((item: any) => (
               <PersonCard
                 name={item?.name}
-                specialties={item?.specialty?.name}
+                specialties={item?.specialty}
                 key={item?._id}
                 imageUrl={item?.imageUrl}
               />
@@ -47,7 +47,7 @@ const Staff = () => {
           data?.data?.slice(2).map((item: any) => (
             <PersonCard
               name={item?.name}
-              specialties={item?.specialty?.name}
+              specialties={item?.specialty}
               key={item?._id}
               imageUrl={item?.imageUrl}
             />

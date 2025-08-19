@@ -402,7 +402,7 @@ const getProductById = async (req, res) => {
 };
 
 const createOrder = async (req, res) => {
-  const { user, products, totalAmount, status, address } = req.body;
+  const { user, products, totalAmount, status, address, firstName, lastname, email, phone } = req.body;
   try {
     const foundUser = await UserSchema.findById(user);
     if (!foundUser) {
@@ -423,6 +423,10 @@ const createOrder = async (req, res) => {
       totalAmount: totalAmount,
       status: status || "pending",
       address: address,
+      firstName: firstName,
+      lastname: lastname,
+      email: email,
+      phone: phone,
     });
     await newOrder.save();
     return res.status(201).json({

@@ -13,6 +13,7 @@ const QuestionsRouter=require("./routers/QuestionsRouter")
 
 
 
+
 const bodyParser=require("body-parser")
 const cors=require("cors")
 const app=express()
@@ -24,7 +25,7 @@ app.use(cors({
 const PORT=3001
 ConnectDb()
 
-app.use("xw",AuthRouter)
+app.use("/api/auth",AuthRouter)
 app.use("/api",ProductsRouter)
 app.use("/api/persons", PersonRouter)
 app.use("/api/service-levels", ServiceLevelsRouter); 

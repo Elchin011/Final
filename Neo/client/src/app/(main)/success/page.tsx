@@ -1,6 +1,33 @@
-import React from "react";
+"use client";
+import { postApi } from "@/http/api";
+import { useCart } from "@/Providers/CartProvider";
+import { useMutation } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
 
 const SuccessPage = () => {
+
+  const { clearCart } = useCart();
+  const [orderCreated, setOrderCreated] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+
+  useEffect(() => {
+    const sessionId = new URL(window.location.href).searchParams.get("session_id");
+    if (!sessionId) return;
+
+    const createOrder = async () => {
+      try {
+        await postApi("/order-from-stripe", { sessionId });
+        clearCart();
+        setOrderCreated(true);
+      } catch (err: any) {
+        setError(err.message || "Xəta baş verdi");
+      }
+    };
+
+    createOrder();
+  }, [clearCart]);
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="w-full max-w-2xl p-12 mx-4 text-center transition-all transform bg-white shadow-lg rounded-xl hover:shadow-xl">

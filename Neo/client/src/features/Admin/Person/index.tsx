@@ -129,7 +129,7 @@ const PersonList = () => {
     data?.data?.map((item: any) => ({
       id: item?._id,
       name: item?.name,
-      specialty: item?.specialty,
+      specialty: typeof item?.specialty === "object" ? item?.specialty?.name : item?.specialty,
       image: (
         <img
           src={item?.imageUrl}
