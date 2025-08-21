@@ -8,6 +8,7 @@ import { CommonDialog } from '@/features/common/Dialog'
 import { deleteApi, getAPi, postApi } from '@/http/api'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useFormik } from 'formik'
+import { Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
 import * as yup from "yup"
 
@@ -59,12 +60,6 @@ const PersonSpecialtiesList = () => {
                 actions: (
                     <div className='flex items-center gap-1.5'>
                         <Button
-                            className="bg-blue-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white duration-300"
-                            variant="outline"
-                        >
-                            Edit
-                        </Button>
-                        <Button
                             className="bg-red-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-red-600 hover:text-white duration-300"
                             variant="outline"
                             onClick={() => {
@@ -73,7 +68,7 @@ const PersonSpecialtiesList = () => {
                                 }
                             }}
                         >
-                            Delete
+                            <Trash2 />
                         </Button>
                     </div>
                 )

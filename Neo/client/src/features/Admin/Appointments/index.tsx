@@ -16,6 +16,7 @@ import { deleteApi, getAPi, patchAppointmentApi } from "@/http/api";
 import { AppointmentStatus } from "@/lib/appointment";
 import { Label } from "@radix-ui/react-label";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { Pencil, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
 const AppointmentList = () => {
@@ -74,7 +75,7 @@ const AppointmentList = () => {
               setSelectAppointmentId(item._id);
             }}
           >
-            Edit
+            <Pencil />
           </Button>
           <Button
             variant="outline"
@@ -82,7 +83,7 @@ const AppointmentList = () => {
             onClick={() => deleteAppointment(item._id)}
             disabled={isDeleting}
           >
-            Delete
+            <Trash2 />
           </Button>
         </div>
       ),

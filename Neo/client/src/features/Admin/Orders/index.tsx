@@ -16,6 +16,7 @@ import { deleteApi, getAPi, patchApi, patchOrderApi } from "@/http/api";
 import { OrderStatus } from "@/lib/check-status";
 import { Label } from "@radix-ui/react-label";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { Pencil, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
 const OrderList = () => {
@@ -103,7 +104,9 @@ const OrderList = () => {
                 setStatus(item?.status);
                 setSelectOrderId(item?._id);
               }}
-            >Edit</Button>
+            >
+              <Pencil />
+            </Button>
             <Button
               variant="outline"
               className="bg-red-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-red-600 hover:text-white duration-300"
@@ -111,7 +114,8 @@ const OrderList = () => {
                 deleteOrder(item._id);
               }}
               disabled={isDeleting}
-            > Delete
+            >
+              <Trash2 />
             </Button>
           </div>
         ),

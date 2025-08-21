@@ -16,7 +16,7 @@ import { CommonDialog } from "@/features/common/Dialog";
 import { deleteApi, getAPi, postApi, patchApi, patchProductApi } from "@/http/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { UploadIcon } from "lucide-react";
+import { Pencil, Trash2, UploadIcon } from "lucide-react";
 import React, { useState } from "react";
 import * as yup from "yup";
 
@@ -144,7 +144,7 @@ const PersonList = () => {
             variant="outline"
             onClick={() => handleEditClick(item)}
           >
-            Edit
+            <Pencil />
           </Button>
           <Button
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
@@ -156,7 +156,7 @@ const PersonList = () => {
             }}
             disabled={deletePending}
           >
-            {deletePending ? "Deleting..." : "Delete"}
+            <Trash2 />
           </Button>
         </div>
       ),
