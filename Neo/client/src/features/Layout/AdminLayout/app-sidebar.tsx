@@ -64,6 +64,11 @@ const items = [
         url: "/admin/questions",
         icon: CircleQuestionMark,
     },
+    {
+        title: "Appointments",
+        url: "/admin/appointments",
+        icon: Settings,
+    },
     
 ]
 

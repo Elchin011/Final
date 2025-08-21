@@ -7,6 +7,7 @@ const PersonRouter=require("./routers/PersonRouter")
 const ServiceLevelsRouter=require("./routers/ServiceLevelsRouter")
 const BlogRouter=require("./routers/BlogRouter")
 const QuestionsRouter=require("./routers/QuestionsRouter")
+const AppointmentRouter=require("./routers/AppointmentRouter")
 
 
 
@@ -16,6 +17,7 @@ const QuestionsRouter=require("./routers/QuestionsRouter")
 
 const bodyParser=require("body-parser")
 const cors=require("cors")
+const AppointmentSchema = require("./models/Appointment/AppointmentSchema")
 const app=express()
 
 app.use(bodyParser.json())
@@ -31,6 +33,7 @@ app.use("/api/persons", PersonRouter)
 app.use("/api/service-levels", ServiceLevelsRouter); 
 app.use("/api/blogs", BlogRouter)
 app.use("/api/questions", QuestionsRouter);
+app.use("/api/appointments", AppointmentRouter);
 
 
 app.listen(PORT,()=>{

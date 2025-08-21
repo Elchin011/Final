@@ -107,11 +107,38 @@ const deletePerson = async (req, res) => {
   });
 };
 
+const updatePerson = async (req, res) => {
+  const { id } = req.params;
+  const { name, specialty } = req.body;
+
+  const person = await PersonSchema.findByIdAndUpdate(
+    id,
+    {
+      name: name,
+      specialty: specialty,
+      imageUrl: req.file ? req.file.path : undefined,
+    },
+    { new: true }
+  );
+
+  if (!person) {
+    return res.status(404).json({
+      message: "Person not found",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Person updated successfully",
+    data: person,
+  });
+}
+
 module.exports = {
     getAllPerson,
     getAllSpecialties,
     createPersonSpecialty,
     createPerson,
     deletePerson,
-    deletePersonSpecialty
+    deletePersonSpecialty,
+    updatePerson
 };

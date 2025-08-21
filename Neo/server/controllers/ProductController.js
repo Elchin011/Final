@@ -354,32 +354,70 @@ const updateProduct = async (req, res) => {
   const { name, price, description, categories, stockQuantity, sizes, colors } =
     req.body;
 
-  try {
-    const updatedProduct = await ProductSchema.findByIdAndUpdate(
-      id,
-      {
-        name,
-        price,
-        description,
-        categories,
-        stockQuantity,
-        sizes,
-        colors,
-      },
-      { new: true }
-    );
-    if (!updatedProduct) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-    return res.status(200).json({
-      message: "Product updated successfully",
-      data: updatedProduct,
+  if (!name || !price || !categories || stockQuantity === undefined) {
+    return res.status(400).json({
+      message: "All fields are required",
     });
   }
-  catch (err) {
-    return res.status(500).json({ message: "Server error", error: err.message });
+
+  const parsedPrice = Number(price);
+  const parsedStockQuantity = Number(stockQuantity);
+
+  if (isNaN(parsedPrice) || isNaN(parsedStockQuantity)) {
+    return res.status(400).json({
+      message: "Price and stockQuantity must be numbers",
+    });
   }
+
+  const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, price, description, categories, stockQuantity, sizes, colors } =
+    req.body;
+
+  if (!name || !price || !categories || stockQuantity === undefined) {
+    return res.status(400).json({
+      message: "All fields are required",
+    });
+  }
+
+  const parsedPrice = Number(price);
+  const parsedStockQuantity = Number(stockQuantity);
+
+  if (isNaN(parsedPrice) || isNaN(parsedStockQuantity)) {
+    return res.status(400).json({
+      message: "Price and stockQuantity must be numbers",
+    });
+  }
+}
+
+  const updatedProduct = await ProductSchema.findByIdAndUpdate(
+    id,
+    {
+      name,
+      price: parsedPrice,
+      description,
+      imageUrl: req.file ? req.file.path : undefined,
+      categories,
+      stockQuantity: parsedStockQuantity,
+      sizes,
+      colors,
+    },
+    { new: true }
+  );
+
+  if (!updatedProduct) {
+    return res.status(404).json({
+      message: "Product not found",
+    });
+  }
+
+  // ✅ Burada cavab göndər
+  return res.status(200).json({
+    message: "Product updated successfully",
+    data: updatedProduct,
+  });
 };
+
 
 const getProductById = async (req, res) => {
   const { id } = req.params;
@@ -542,3 +580,4 @@ module.exports = {
   deleteOrder,
   updateProduct
 };
+

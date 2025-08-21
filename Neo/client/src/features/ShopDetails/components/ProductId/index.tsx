@@ -48,7 +48,7 @@ const ProductId = () => {
                 <div className="grid grid-cols-12 gap-10 object-cover" key={data.data._id || data.data.id}>
                    
                     <div className="col-span-7">
-                        <img className="w-full" src={data.data.imageUrl} alt={data.data.name} />
+                        <img className="w-full object-cover" src={data.data.imageUrl} alt={data.data.name} />
                     </div>
 
                     
@@ -117,6 +117,10 @@ const ProductId = () => {
                             <div className='flex items-center gap-2 mb-3'>
                                 <h5 className='text-[15px] text-[#1c1c1c] font-semibold uppercase'>Categories:</h5>
                                 <p className='text-[16px] text-[#565656]'>{data.data.categories.name}</p>
+                            </div>
+                            <div className='flex items-center gap-2 mb-3'>
+                                <h5 className='text-[15px] text-[#1c1c1c] font-semibold uppercase'>Sizes:</h5>
+                                <p className='text-[16px] text-[#565656]'>{data.data.sizes.name}</p>
                             </div>
                         </div>
                     </div>

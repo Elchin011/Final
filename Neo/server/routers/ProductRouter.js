@@ -30,7 +30,7 @@ const router = express.Router();
 
 router.get("/products", authProtectMiddleware, getAllProducts);
 router.post("/product/create", upload.single("file"), createProduct);
-router.patch("/products/:id", updateProduct);
+router.patch("/products/:id", upload.single("file"), updateProduct);
 router.get("/products/sizes", getAllSizes);
 router.post("/products/create/size", createProductSize);
 router.delete("/products/sizes/:id", deleteProductSize);

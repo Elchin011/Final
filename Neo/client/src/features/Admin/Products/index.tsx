@@ -13,7 +13,7 @@ import {
 import { QueryKeys } from "@/constants/QueryKeys";
 import { BasicTable } from "@/features/common/BasicTable";
 import { CommonDialog } from "@/features/common/Dialog";
-import { deleteApi, getAPi, postApi } from "@/http/api";
+import { deleteApi, getAPi, patchProductApi, postApi } from "@/http/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { UploadIcon } from "lucide-react";
@@ -22,6 +22,10 @@ import * as yup from "yup";
 
 const ProductList = () => {
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
+
+
+  const [editProduct, setEditProduct] = useState<any>(null);
+
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: QueryKeys.products.All,
     queryFn: async () => {
@@ -87,22 +91,29 @@ const ProductList = () => {
 
     mutationFn: async (id: string) => await deleteApi(`/products/${id}`),
     onSuccess: () => {
-      refetch(); 
+      refetch();
     },
   });
 
   const {
     mutate: updateProduct,
     isPending: updatePending,
-    isError: updateIsErr,
-    error: updateErr,
   } = useMutation({
-
-    mutationFn: async (data: any) => await postApi(`/products/${data.id}`, data),
+    mutationFn: async ({ id, formData }: { id: string, formData: FormData }) => {
+      return patchProductApi(`/products/${id}`, formData);
+    },
     onSuccess: () => {
+      formik.resetForm();
       refetch();
+      setOpenAddDialog(false);
+      setEditProduct(null);
     },
   });
+
+  const handleEditProduct = (product: any) => {
+    setEditProduct(product);
+    setOpenAddDialog(true);
+  }
 
   const colums = ["id", "name", "price", "image", "actions"];
 
@@ -128,17 +139,7 @@ const ProductList = () => {
               className="bg-blue-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white duration-300"
               variant="outline"
               onClick={() => {
-                setOpenAddDialog(true);
-                updateProduct({
-                  id: item?._id,
-                  name: item?.name,
-                  price: item?.price,
-                  imageUrl: item?.imageUrl,
-                  stockQuantity: item?.stockQuantity,
-                  categories: item?.categories?._id,
-                  sizes: item?.sizes?._id,
-                  colors: item?.colors?._id,
-                });
+                handleEditProduct(item);
               }}
             >
               Edit
@@ -159,36 +160,44 @@ const ProductList = () => {
       };
     });
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: "",
-      price: "",
-      imageUrl: "" as string | File,
-      stockQuantity: "",
-      categories: "",
-      sizes: "",
-      colors: "",
+      name: editProduct ? editProduct.name : "",
+      price: editProduct ? editProduct.price : "",
+      colors: editProduct ? editProduct.colors : "",
+      categories: editProduct ? editProduct.categories : "",
+      sizes: editProduct ? editProduct.sizes : "",
+      stockQuantity: editProduct ? editProduct.stockQuantity : "",
+      imageUrl: editProduct ? editProduct.imageUrl : "",
     },
     validationSchema: yup.object({
-      name: yup.string().required("Size is required"),
+      name: yup.string().required("Name is required"),
+      price: yup.number().required("Price is required").positive("Price must be positive"),
+      colors: yup.string().required("Color is required"),
+      categories: yup.string().required("Category is required"),
+      sizes: yup.string().required("Size is required"),
+      stockQuantity: yup.number().required("Stock Quantity is required").min(0, "Stock Quantity cannot be negative"),
+      imageUrl: yup.mixed().required("Image is required"),
     }),
     onSubmit: async (values) => {
-      console.log(values);
+      console.log("Form values:", values);
       const formData = new FormData();
-      formData.append("name", values?.name ?? "");
-      formData.append("price", values?.price ?? "");
-      formData.append("file", values?.imageUrl ?? "");
-      formData.append("stockQuantity", values?.stockQuantity ?? "");
-      formData.append("categories", values?.categories ?? "");
-      formData.append("sizes", values?.sizes ?? "");
-      formData.append("colors", values?.colors ?? "");
+      formData.append("name", values.name);
+      formData.append("price", values.price);
+      formData.append("colors", values.colors);
+      formData.append("categories", values.categories);
+      formData.append("sizes", values.sizes);
+      formData.append("stockQuantity", values.stockQuantity);
+      if (values.imageUrl && typeof values.imageUrl !== "string") {
+        formData.append("file", values.imageUrl);
+      }
 
-
-      console.log("file in formData:", formData.get("file"));
-
-      mutate(formData);
-      // mutate({
-      //     name: values?.name ?? ""
-      // })
+      if (editProduct) {
+        updateProduct({ id: editProduct._id, formData });
+      }
+      else {
+        mutate(formData);
+      }
     },
   });
 
@@ -197,7 +206,7 @@ const ProductList = () => {
       <div className="flex items-center my-5 justify-between">
         <h1 className="text-3xl font-bold text-gray-800">Products Lists</h1>
         <Button
-        className="bg-green-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-green-600 hover:text-white duration-300"
+          className="bg-green-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-green-600 hover:text-white duration-300"
           onClick={() => {
             setOpenAddDialog(true);
           }}
@@ -208,12 +217,12 @@ const ProductList = () => {
       <BasicTable cols={colums} rows={rows} isLoading={isLoading} />
       {openAddDialog && (
         <CommonDialog
-          open={openAddDialog}
+          open={openAddDialog || Boolean(editProduct)}
           onClose={() => {
             setOpenAddDialog(false);
+            formik.resetForm();
           }}
-          title="Create Product"
-          
+          title={Boolean(editProduct) ? "Edit Product" : "Create Product"}
         >
           <form
             onSubmit={(e: any) => {
@@ -239,11 +248,11 @@ const ProductList = () => {
                   type="text"
                   placeholder="Enter the Product Name."
                 />
-                {formik.touched && formik.errors.name ? (
+                {formik.touched.name && typeof formik.errors.name === "string" && (
                   <div className="text-sm mt-1 font-medium text-red-500">
                     {formik.errors.name}
                   </div>
-                ) : null}
+                )}
               </div>
               <div>
                 <Label className="mb-2" htmlFor="price">
@@ -257,11 +266,11 @@ const ProductList = () => {
                   type="number"
                   placeholder="Enter the Price"
                 />
-                {formik.touched && formik.errors.price ? (
+                {formik.touched.price && typeof formik.errors.price === "string" && (
                   <div className="text-sm mt-1 font-medium text-red-500">
                     {formik.errors.price}
                   </div>
-                ) : null}
+                )}
               </div>
               <div>
                 <Label className="mb-2" htmlFor="name">
@@ -270,6 +279,7 @@ const ProductList = () => {
                 </Label>
                 <Select
                   name="colors"
+                  value={formik.values.colors}
                   onValueChange={(value) => {
                     formik.setFieldValue("colors", value);
                   }}
@@ -288,11 +298,11 @@ const ProductList = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                {formik.touched && formik.errors.name ? (
+                {formik.touched.colors && typeof formik.errors.colors === "string" && (
                   <div className="text-sm mt-1 font-medium text-red-500">
-                    {formik.errors.name}
+                    {formik.errors.colors}
                   </div>
-                ) : null}
+                )}
               </div>
               <div>
                 <Label className="mb-2" htmlFor="name">
@@ -301,6 +311,7 @@ const ProductList = () => {
                 </Label>
                 <Select
                   name="categories"
+                  value={formik.values.categories}
                   onValueChange={(value) => {
                     formik.setFieldValue("categories", value);
                   }}
@@ -319,11 +330,11 @@ const ProductList = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                {formik.touched && formik.errors.name ? (
+                {formik.touched.categories && typeof formik.errors.categories === "string" && (
                   <div className="text-sm mt-1 font-medium text-red-500">
-                    {formik.errors.name}
+                    {formik.errors.categories}
                   </div>
-                ) : null}
+                )}
               </div>
               <div>
                 <Label className="mb-2" htmlFor="name">
@@ -332,6 +343,7 @@ const ProductList = () => {
                 </Label>
                 <Select
                   name="sizes"
+                  value={formik.values.sizes}
                   onValueChange={(value) => {
                     formik.setFieldValue("sizes", value);
                   }}
@@ -350,11 +362,11 @@ const ProductList = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                {formik.touched && formik.errors.name ? (
+                {formik.touched.sizes && typeof formik.errors.sizes === "string" && (
                   <div className="text-sm mt-1 font-medium text-red-500">
-                    {formik.errors.name}
+                    {formik.errors.sizes}
                   </div>
-                ) : null}
+                )}
               </div>
               <div className="mb-4">
                 <Label className="mb-2" htmlFor="stockQuantity">
@@ -368,11 +380,11 @@ const ProductList = () => {
                   type="number"
                   placeholder="enter the stockQuantity "
                 />
-                {formik.touched && formik.errors.stockQuantity ? (
+                {formik.touched.stockQuantity && typeof formik.errors.stockQuantity === "string" && (
                   <div className="text-sm mt-1 font-medium text-red-500">
                     {formik.errors.stockQuantity}
                   </div>
-                ) : null}
+                )}
               </div>
             </div>
             <div>
@@ -418,14 +430,25 @@ const ProductList = () => {
                   </div>
                 )}
             </div>
-            <Button disabled={isPending} className="my-4 py-4 rounded-md w-full" type="submit">
-              {isPending ? "creating..." : "Create"}
+            <Button
+              disabled={isPending || updatePending}
+              className="my-4 py-4 rounded-md w-full"
+              type="submit"
+            >
+              {Boolean(editProduct)
+                ? updatePending
+                  ? "Updating..."
+                  : "Update"
+                : isPending
+                  ? "Creating..."
+                  : "Create"}
             </Button>
           </form>
         </CommonDialog>
       )}
     </div>
   );
-};
+}
+
 
 export default ProductList;

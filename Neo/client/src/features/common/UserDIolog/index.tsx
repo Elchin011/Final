@@ -9,8 +9,8 @@ type User = {
   name: string;
 };
 type UserMenuProps = {
-    user: User;
-    };
+  user: User;
+};
 
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
   const [localUser, setLocalUser] = useState<User | null>(null);
@@ -49,22 +49,27 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
       {open && (
         <div className="absolute -left-17 mt-2 w-40 rounded-md shadow-md p-2 bg-white z-10">
           <div className="py-1">
-            <div className="px-4 py-1 text-[16px] text-black">{displayUser.name}</div>
-            <p className="text-sm px-4 text-gray-700">
-              <Link href="/orders">Orders</Link>
-            </p>
+            <div className="px-4 py-1 font-semibold text-[16px] text-black">{displayUser.name}</div>
+            <div className="py-2 border-b border-t border-gray-200">
+              <p className="text-[12px] uppercase font-semibold px-4 text-gray-700">
+                <Link href="/orders">Orders</Link>
+              </p>
+              <p className="text-[12px] uppercase font-semibold px-4 text-gray-700">
+                <Link href="/appointment">Appointments</Link>
+              </p>
+            </div>
 
             <div className="px-4 mt-2 flex items-center justify-between">
-              <p className="text-sm text-gray-700">Log out</p>
               <Button
-                className="border-none hover:bg-white shadow-none"
+                className="border-none hover:bg-white shadow-none flex items-center justify-between"
                 variant="outline"
                 onClick={() => {
                   localStorage.removeItem("user");
                   window.location.reload();
                 }}
               >
-                <LogOutIcon strokeWidth={1.5} size={14} />
+                <p className="text-[13px] uppercase font-semibold tracking-[0.6px] text-gray-700 mr-8">Log out</p>
+                <LogOutIcon strokeWidth={2} size={14} />
               </Button>
             </div>
           </div>

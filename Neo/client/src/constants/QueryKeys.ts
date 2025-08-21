@@ -18,6 +18,10 @@ export const QueryKeys = {
         all: ["orders"],
         updateOrderStatus: (orderId: string) => ["update-order-status", orderId],
     },
+    appointments: {
+        All: ["All_appointments"],
+        updateAppointmentStatus: (appointmentId: string) => ["update-appointment-status", appointmentId],
+    },
     persons: {
         All: ["All_persons"],
         createPerson: ["create-person"],

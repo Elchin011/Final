@@ -1,4 +1,4 @@
-import { IForm } from "@/features/Appointment/themplates";
+import { IForm } from "@/features/BkAppointment/themplates";
 import axios from "axios";
 
 const api = axios.create({
@@ -143,11 +143,13 @@ export const patchOrderApi = async (url: string, data: any) => {
 }
 
 
-export const addAppointment = async (url: string, data: IForm) => {
+export const patchAppointmentApi = async (url: string, data: any) => {
     try {
-        const response = await api.post(`${url}`, data);
-        return response.data
+        const response = await api.patch(`${url}`, data);
+        return response.data;
+
     } catch (error) {
-        throw error;
+        throw error
+
     }
 }

@@ -3,6 +3,7 @@ import { useContext, createContext, useState, useEffect } from "react";
 
 const CartContext = createContext<any>(null);
 
+
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<any[]>(() => {
     if (typeof window !== "undefined") {
