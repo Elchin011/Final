@@ -60,7 +60,7 @@ const BlogList = () => {
         },
     });
 
-    const columns = ["id", "title", "date", "image", "actions"];
+    const columns = ["Id", "Title", "Date", "Image", "Actions"];
 
     const rows =
         data &&
