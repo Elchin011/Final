@@ -41,7 +41,7 @@ const AppointmentList = () => {
 
   const isDeleting = deleteStatus === "pending";
 
-  const columns = ["id", "customer", "doctor", "date", "time", "status", "actions"];
+  const columns = ["id", "Patient", "Doctor", "Date", "Time", "Status", "Actions"];
 
   const rows =
     data &&
