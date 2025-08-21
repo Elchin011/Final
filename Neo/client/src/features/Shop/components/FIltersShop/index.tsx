@@ -44,9 +44,21 @@ const FiltersShop = () => {
 
     const filteredProducts = data?.data || [];
     const productsToShow = filteredProducts.length > 6 ? filteredProducts.slice(6) : filteredProducts;
-   
+
 
     const { addToCart } = useCart();
+
+     if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <img
+          className="w-20 h-10"
+          src="https://raw.githubusercontent.com/Codelessly/FlutterLoadingGIFs/master/packages/cupertino_activity_indicator_large.gif"
+          alt="Loading..."
+        />
+      </div>
+    );
+
 
     return (
         <div className='container mx-auto mt-32.5 mb-31.5'>
@@ -93,37 +105,40 @@ const FiltersShop = () => {
                                 }
                             </div>
                         </div>
-                        
-
                     </div>
-
-
                 </div>
                 <div className='col-span-9'>
                     <div className='grid grid-cols-3 gap-10'>
-                        {
-                            productsToShow.length > 0 ? (
-                                productsToShow.map((item: any) => (
-                                    <ShopCard
-                                        key={item._id}
-                                        id={item._id}
-                                        name={item.name}
-                                        price={item.price}
-                                        catgerires={item.categories}
-                                        img={item.imageUrl}
-                                        addToCart={() => {
-                                            if (!user?.name) {
-                                                toast.error("Please login to add items to the cart");
-                                                return;
-                                            }
-                                            addToCart(item);
-                                            toast.success("Product added to cart");
-                                        }}
-                                    />
-                                ))
-                            ) : (
-                                <div className='col-span-3 text-center'>No products found</div>
-                            )}
+                        {isLoading ? (
+                            <div className='col-span-3 text-center'>
+                                <img src="https://i.sstatic.net/kOnzy.gif" alt="Loading..." />
+                            </div>
+                        ) : isError ? (
+                            <div className='col-span-3 text-center text-red-500'>
+                                Error loading products
+                            </div>
+                        ) : productsToShow.length > 0 ? (
+                            productsToShow.map((item: any) => (
+                                <ShopCard
+                                    key={item._id}
+                                    id={item._id}
+                                    name={item.name}
+                                    price={item.price}
+                                    catgerires={item.categories}
+                                    img={item.imageUrl}
+                                    addToCart={() => {
+                                        if (!user?.name) {
+                                            toast.error("Please login to add items to the cart");
+                                            return;
+                                        }
+                                        addToCart(item);
+                                        toast.success("Product added to cart");
+                                    }}
+                                />
+                            ))
+                        ) : (
+                            <div className='col-span-3 text-center'>No products found</div>
+                        )}
                     </div>
                 </div>
 

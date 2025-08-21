@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import RegisterForm from "@/features/Register/components";
 import LoginForm from "@/features/Login/components/LoginForm";
 import UserMenu from "@/features/common/UserDIolog";
+import dynamic from "next/dynamic";
 
 export const Header = () => {
   const {
@@ -33,6 +34,9 @@ export const Header = () => {
     typeof window !== "undefined"
       ? JSON.parse(localStorage.getItem("user") || "null")
       : null;
+
+
+      const UserMenuNoSSr = dynamic (() => import("@/features/common/UserDIolog"), { ssr: false });
 
 
   const router = useRouter()
@@ -340,7 +344,7 @@ export const Header = () => {
               </Link>
             </div>
             <div className="hidden lg:flex items-center gap-2">
-              <UserMenu user={user} />
+              <UserMenuNoSSr user={user} />
             </div>
             <div>
 
