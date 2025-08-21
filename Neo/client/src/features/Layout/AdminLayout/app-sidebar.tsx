@@ -40,13 +40,13 @@ const items = [
         icon: Settings,
     },
     {
-        title: "Persons",
-        url: "/admin/persons",
-        icon: FileUser, 
+        title: "Personals",
+        url: "/admin/personals",
+        icon: FileUser,
     },
     {
-        title: "Person Specialties",
-        url: "/admin/person-specialties",
+        title: "Personal Specialties",
+        url: "/admin/personal-specialties",
         icon: Stethoscope,
     },
     {

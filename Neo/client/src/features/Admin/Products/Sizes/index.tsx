@@ -117,7 +117,7 @@ const ProductSizeList = () => {
                         }}
                     >
                         {
-                            createIsErr && <div className='bg-red-100 text-red-500 rounded-2xl p-4'>
+                            createIsErr && <div className='bg-red-100 text-red-500 rounded-2xl p-4 '>
                                 {
                                     createErr?.message
                                 }

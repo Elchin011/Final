@@ -41,17 +41,17 @@ const AppointmentList = () => {
 
   const isDeleting = deleteStatus === "pending";
 
-  const columns = ["id", "Patient", "Doctor", "Date", "Time", "Status", "Actions"];
+  const columns = ["Id", "Patient", "Doctor", "Date", "Time", "Status", "Actions"];
 
   const rows =
     data &&
     data?.data?.map((item: any) => ({
-      id: item._id,
-      customer: `${item.firstName} ${item.lastname}`,
-      doctor: item.doctor?.name || "N/A",
-      date: new Date(item.date).toLocaleDateString(),
-      time: item.time,
-      status: (
+      Id: item._id,
+      Patient: `${item.firstName} ${item.lastname}`,
+      Doctor: item.doctor?.name || "N/A",
+      Date: new Date(item.date).toLocaleDateString(),
+      Time: item.time,
+      Status: (
         <Button
           onClick={() => {
             setIsOpenModalIsEditStatus(true);
@@ -64,7 +64,7 @@ const AppointmentList = () => {
           {item.status}
         </Button>
       ),
-      actions: (
+      Actions: (
         <div className="flex items-center gap-1.5">
           <Button
             variant="outline"

@@ -115,25 +115,25 @@ const ProductList = () => {
     setOpenAddDialog(true);
   }
 
-  const colums = ["id", "name", "price", "image", "actions"];
+  const columns = ["Id", "Name", "Price", "Image", "Actions"];
 
   const rows =
     data &&
     data?.data?.map((item: any) => {
       return {
-        id: item?._id,
-        name: item?.name,
-        price: item?.price,
-        image: (
+        Id: item?._id,
+        Name: item?.name,
+        Price: item?.price,
+        Image: (
           <div>
             <img
               src={item?.imageUrl}
               alt={item?.name}
-              className="w-16 h-16 object-cover rounded-md"
+              className="w-16 h-16 object-contain rounded-md"
             />
           </div>
         ),
-        actions: (
+        Actions: (
           <div className="flex items-center gap-2">
             <Button
               className="bg-blue-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white duration-300"
@@ -214,7 +214,7 @@ const ProductList = () => {
           Add Product
         </Button>
       </div>
-      <BasicTable cols={colums} rows={rows} isLoading={isLoading} />
+      <BasicTable cols={columns} rows={rows} isLoading={isLoading} />
       {openAddDialog && (
         <CommonDialog
           open={openAddDialog || Boolean(editProduct)}

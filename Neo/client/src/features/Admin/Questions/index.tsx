@@ -51,17 +51,17 @@ const QuestionsList = () => {
         },
     });
 
-    const columns = ["id", "question", "answer", "actions"];
+    const columns = ["Id", "Question", "Answer", "Actions"];
 
     const rows =
         data &&
         data?.data?.map((item: any) => {
             return { 
-                id: item?._id,
-                question: item?.question,
-                answer: item?.answer,
-                
-                actions: (
+                Id: item?._id,
+                Question: item?.question,
+                Answer: item?.answer,
+
+                Actions: (
                     <div className="flex items-center gap-2">
                         <Button
                             className="bg-red-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-red-600 hover:text-white duration-300"

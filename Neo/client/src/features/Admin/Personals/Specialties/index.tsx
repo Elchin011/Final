@@ -12,7 +12,7 @@ import { Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
 import * as yup from "yup"
 
-const PersonSpecialtiesList = () => {
+const PersonalSpecialtiesList = () => {
     const [openAddSizeDialog, setOpenAddSizeDialog] = useState<boolean>(false)
 
     const { data, isLoading, isError, error, refetch } = useQuery({
@@ -46,18 +46,18 @@ const PersonSpecialtiesList = () => {
     });
 
 
-    const colums = [
-        "id",
-        "name",
-        "actions"
+    const columns = [
+        "Id",
+        "Name",
+        "Actions"
     ]
 
     const rows = data && data?.data?.map((item: any) => {
         return (
             {
-                id: item?._id,
-                name: item?.name,
-                actions: (
+                Id: item?._id,
+                Name: item?.name,
+                Actions: (
                     <div className='flex items-center gap-1.5'>
                         <Button
                             className="bg-red-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-red-600 hover:text-white duration-300"
@@ -105,7 +105,7 @@ const PersonSpecialtiesList = () => {
                 </Button>
 
             </div>
-            <BasicTable cols={colums} rows={rows} isLoading={isLoading} />
+            <BasicTable cols={columns} rows={rows} isLoading={isLoading} />
             {
                 openAddSizeDialog && <CommonDialog open={openAddSizeDialog} onClose={() => {
                     setOpenAddSizeDialog(false)
@@ -153,4 +153,4 @@ const PersonSpecialtiesList = () => {
     )
 }
 
-export default PersonSpecialtiesList
+export default PersonalSpecialtiesList

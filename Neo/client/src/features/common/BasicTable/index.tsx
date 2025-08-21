@@ -38,7 +38,7 @@ export const BasicTable: FC<BasicTableProps> = ({ rows, cols, isLoading }) => {
                                 <TableRow key={index}>
                                     {
                                         cols.map((col: any) => (
-                                            <TableCell key={col} className="text-left py-3.5">
+                                            <TableCell key={col} className="text-left py-5.5">
                                                 {row[col]}
                                             </TableCell>
                                         ))

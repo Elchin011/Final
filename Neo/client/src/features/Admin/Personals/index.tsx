@@ -20,7 +20,7 @@ import { Pencil, Trash2, UploadIcon } from "lucide-react";
 import React, { useState } from "react";
 import * as yup from "yup";
 
-const PersonList = () => {
+const PersonalList = () => {
   // Modal açılıb-bağlanma state-ləri
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -123,21 +123,21 @@ const PersonList = () => {
     setOpenEditDialog(true);
   };
 
-  const columns = ["id", "name", "specialty", "image", "actions"];
+  const columns = ["Id", "Name", "Specialty", "Image", "Actions"];
 
   const rows =
     data?.data?.map((item: any) => ({
-      id: item?._id,
-      name: item?.name,
-      specialty: typeof item?.specialty === "object" ? item?.specialty?.name : item?.specialty,
-      image: (
+      Id: item?._id,
+      Name: item?.name,
+      Specialty: typeof item?.specialty === "object" ? item?.specialty?.name : item?.specialty,
+      Image: (
         <img
           src={item?.imageUrl}
           alt={item?.name}
           className="w-16 h-16 object-cover rounded-md"
         />
       ),
-      actions: (
+      Actions: (
         <div className="flex items-center gap-2">
           <Button
             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
@@ -309,4 +309,4 @@ const PersonList = () => {
   );
 };
 
-export default PersonList;
+export default PersonalList;

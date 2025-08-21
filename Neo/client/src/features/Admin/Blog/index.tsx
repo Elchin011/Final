@@ -66,19 +66,19 @@ const BlogList = () => {
         data &&
         data?.data?.map((item: any) => {
             return {
-                id: item?._id,
-                title: item?.title,
-                date: item?.date,
-                image: (
+                Id: item?._id,
+                Title: item?.title,
+                Date: item?.date,
+                Image: (
                     <div>
                         <img
                             src={item?.imageUrl}
                             alt={item?.name}
-                            className="w-16 h-16 object-cover rounded-md"
+                            className="w-16 h-16 object-contain rounded-md"
                         />
                     </div>
                 ),
-                actions: (
+                Actions: (
                     <div className="flex items-center gap-2">
                         <Button
                             className="bg-blue-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white duration-300"
