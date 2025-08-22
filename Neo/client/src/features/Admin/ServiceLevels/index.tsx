@@ -128,7 +128,7 @@ const ServiceLevelsList = () => {
       <div className="flex items-center my-5 justify-between">
         <h1 className="text-3xl font-bold text-gray-800">Service Levels List</h1>
         <Button
-          className="bg-green-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-green-600 hover:text-white duration-300"
+          className="bg-green-500 text-white p-1.5 px-2.5 rounded-md hover:bg-green-600 hover:text-white duration-300"
           onClick={() => {
             setOpenAddDialog(true);
           }}

@@ -42,12 +42,12 @@ export const ShopCard = ({
               loader={cloudinaryLoader}
               src={img ?? ""}
               alt="Product"
-              className="w-full h-full absolute inset-0 object-cover"
+              className="w-full h-full absolute inset-0 object-contain"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
-          <div className="pt-6 pb-10 text-center relative bg-[#f9f9f9]">
+          <div className="pt-6 pb-10 text-center relative  bg-[#f9f9f9]">
             <h3 className="text-[17px] font-semibold text-[#1c1c1c] mb-1.5 uppercase tracking-[0.34px]">
               <Link href={`/shops/${id}`}>{name}</Link>
             </h3>

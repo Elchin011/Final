@@ -71,20 +71,20 @@ const PersonalList = () => {
   });
 
   // Şəxsi yeniləmək mutation (PATCH metodu ilə)
- const {
-  mutate: updatePerson,
-  isPending: updatePending,
-} = useMutation({
-  mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
-    return patchProductApi(`/persons/${id}`, formData);
-  },
-  onSuccess: () => {
-    formik.resetForm();
-    refetch();
-    setOpenEditDialog(false);
-    setEditPerson(null);
-  },
-});
+  const {
+    mutate: updatePerson,
+    isPending: updatePending,
+  } = useMutation({
+    mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
+      return patchProductApi(`/persons/${id}`, formData);
+    },
+    onSuccess: () => {
+      formik.resetForm();
+      refetch();
+      setOpenEditDialog(false);
+      setEditPerson(null);
+    },
+  });
 
 
   // Formik form
@@ -93,7 +93,7 @@ const PersonalList = () => {
     initialValues: {
       name: editPerson ? editPerson.name : "",
       specialty: editPerson ? editPerson.specialty : "",
-      imageUrl: "" as string | File,
+      imageUrl: editPerson ? editPerson?.imageUrl : "" as string | File,
     },
     validationSchema: yup.object({
       name: yup.string().required("Name is required"),
@@ -140,14 +140,14 @@ const PersonalList = () => {
       Actions: (
         <div className="flex items-center gap-2">
           <Button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            className="bg-blue-500 text-white p-1.5 px-2.5 rounded-md hover:bg-blue-600"
             variant="outline"
             onClick={() => handleEditClick(item)}
           >
             <Pencil />
           </Button>
           <Button
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+            className="bg-red-500 text-white p-1.5 px-2.5 rounded-md hover:bg-red-600"
             variant="outline"
             onClick={() => {
               if (confirm("Are you sure you want to delete this person?")) {
@@ -277,15 +277,19 @@ const PersonalList = () => {
               </div>
 
               {/* Upload olunan faylın adı və ölçüsü */}
-              {formik.values.imageUrl && typeof formik.values.imageUrl !== "string" && (
-                <div className="flex items-center justify-between mt-2">
-                  <div>
-                    <p className="font-medium">{formik.values.imageUrl.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {(formik.values.imageUrl.size / 1024).toFixed(2)} KB
-                    </p>
+              {formik.values.imageUrl && (
+                typeof formik.values.imageUrl === "string" ? (
+                  <img src={formik.values.imageUrl} alt="Preview" className="w-24 h-24 object-cover mt-2 rounded-md" />
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">{formik.values.imageUrl.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {(formik.values.imageUrl.size / 1024).toFixed(2)} KB
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )
               )}
             </div>
 
@@ -299,8 +303,8 @@ const PersonalList = () => {
                   ? "Updating..."
                   : "Update"
                 : createPending
-                ? "Creating..."
-                : "Create"}
+                  ? "Creating..."
+                  : "Create"}
             </Button>
           </form>
         </CommonDialog>

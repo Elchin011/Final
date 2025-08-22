@@ -136,7 +136,7 @@ const ProductList = () => {
         Actions: (
           <div className="flex items-center gap-2">
             <Button
-              className="bg-blue-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white duration-300"
+              className="bg-blue-500 text-white p-1.5 px-2.5 rounded-md hover:bg-blue-600 hover:text-white duration-300"
               variant="outline"
               onClick={() => {
                 handleEditProduct(item);
@@ -145,7 +145,7 @@ const ProductList = () => {
               <Pencil />
             </Button>
             <Button
-              className="bg-red-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-red-600 hover:text-white duration-300"
+              className="bg-red-500 text-white p-1.5 px-2.5 rounded-md hover:bg-red-600 hover:text-white duration-300"
               variant="outline"
               onClick={() => {
                 if (confirm("Are you sure you want to delete this product?")) {
@@ -168,7 +168,7 @@ const ProductList = () => {
       categories: editProduct ? editProduct.categories : "",
       sizes: editProduct ? editProduct.sizes : "",
       stockQuantity: editProduct ? editProduct.stockQuantity : "",
-      imageUrl: editProduct ? editProduct.imageUrl : "",
+      imageUrl: editProduct ? editProduct.imageUrl : "" as string | File,
     },
     validationSchema: yup.object({
       name: yup.string().required("Name is required"),
@@ -416,19 +416,20 @@ const ProductList = () => {
                   />
                 </label>
               </div>
-              {formik.values.imageUrl &&
-                typeof formik.values.imageUrl !== "string" && (
+              {formik.values.imageUrl && (
+                typeof formik.values.imageUrl === "string" ? (
+                  <img src={formik.values.imageUrl} alt="Preview" className="w-32 h-32 object-contain mt-2 rounded-md" />
+                ) : (
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">
-                        {formik.values.imageUrl.name}
-                      </p>
+                      <p className="font-medium">{formik.values.imageUrl.name}</p>
                       <p className="text-sm text-muted-foreground">
                         {(formik.values.imageUrl.size / 1024).toFixed(2)} KB
                       </p>
                     </div>
                   </div>
-                )}
+                )
+              )}
             </div>
             <Button
               disabled={isPending || updatePending}

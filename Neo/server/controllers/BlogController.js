@@ -82,12 +82,18 @@ const updateBlog = async (req, res) => {
   try {
     const updatedBlog = await BlogSchema.findByIdAndUpdate(
       id,
-      { title, date, imageUrl: req.file ? req.file.path : undefined },
+      { 
+        title: title,
+        date: date,
+        imageUrl: req.file ? req.file.path : undefined
+      },
       { new: true }
     );
 
     if (!updatedBlog) {
-      return res.status(404).json({ message: "Blog not found" });
+      return res.status(404).json({ 
+        message: "Blog not found" 
+      });
     }
 
     return res.status(200).json({ data: updatedBlog });

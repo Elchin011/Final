@@ -24,6 +24,13 @@ import * as yup from "yup";
 const BlogList = () => {
     const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
     const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+    const [editBlog, setEditBlog] = useState<any>(null);
+
+
+
+
+
+
     const { data, isLoading, isError, error, refetch } = useQuery({
         queryKey: QueryKeys.blogs.All,
         queryFn: async () => {
@@ -73,8 +80,48 @@ const BlogList = () => {
             formik.resetForm();
             refetch();
             setOpenEditDialog(false);
+            setEditBlog(null);
         },
     });
+
+
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            title: editBlog ? editBlog?.title : "",
+            date: editBlog ? editBlog?.date : "",
+            imageUrl: editBlog ? editBlog?.imageUrl : "" as string | File,
+        },
+
+        validationSchema: yup.object({
+            title: yup.string().required("Title is required"),
+            date: yup.string().required("Date is required"),
+        }),
+        onSubmit: (values) => {
+            const formData = new FormData();
+            formData.append("title", values.title);
+            if (values.imageUrl && typeof values.imageUrl !== "string") {
+                formData.append("file", values.imageUrl);
+            }
+            formData.append("date", values.date);
+            if (editBlog) {
+                updateBlog({ id: editBlog?._id, formData });
+            } else {
+                mutate(formData);
+            }
+        },
+    });
+
+    const handleEdit = (blog: any) => {
+        setEditBlog(blog);
+        setOpenEditDialog(true);
+        formik.setValues({
+            title: blog?.title,
+            date: blog?.date,
+            imageUrl: "",
+        });
+    };
+
 
     const columns = ["Id", "Title", "Date", "Image", "Actions"];
 
@@ -97,13 +144,16 @@ const BlogList = () => {
                 Actions: (
                     <div className="flex items-center gap-2">
                         <Button
-                            className="bg-blue-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white duration-300"
+                            className="bg-blue-500 text-white p-1.5 px-2.5 rounded-md hover:bg-blue-600 hover:text-white duration-300"
                             variant="outline"
+                            onClick={() => {
+                                handleEdit(item);
+                            }}
                         >
                             <Pencil />
                         </Button>
                         <Button
-                            className="bg-red-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-red-600 hover:text-white duration-300"
+                            className="bg-red-500 text-white p-1.5 px-2.5 rounded-md hover:bg-red-600 hover:text-white duration-300"
                             variant="outline"
                             onClick={() => {
                                 if (confirm("Are you sure you want to delete this blog?")) {
@@ -117,28 +167,9 @@ const BlogList = () => {
                 ),
             };
         });
-    const formik = useFormik({
-        initialValues: {
-            title: "",
-            imageUrl: "" as string | File,
-            date: "",
-        },
-        validationSchema: yup.object({
-            title: yup.string().required("Title is required"),
-            date: yup.string().required("Date is required"),
-        }),
-        onSubmit: async (values) => {
-            console.log(values);
-            const formData = new FormData();
-            formData.append("title", values?.title ?? "");
-            formData.append("file", values?.imageUrl ?? "");
-            formData.append("date", values?.date ?? "");
-            mutate(formData);
-            // mutate({
-            //     title: values?.title ?? ""
-            // })
-        },
-    });
+
+
+
 
     return (
         <div>
@@ -154,13 +185,16 @@ const BlogList = () => {
                 </Button>
             </div>
             <BasicTable cols={columns} rows={rows} isLoading={isLoading} />
-            {openAddDialog && (
+            {(openAddDialog || openEditDialog) && (
                 <CommonDialog
-                    open={openAddDialog}
+                    open={openAddDialog || openEditDialog}
                     onClose={() => {
                         setOpenAddDialog(false);
+                        setOpenEditDialog(false);
+                        setEditBlog(null);
+                        formik.resetForm();
                     }}
-                    title="Create New Blog"
+                    title={openEditDialog ? "Edit Blog" : "Add Blog"}
                 >
                     <form
                         onSubmit={(e: any) => {
@@ -185,12 +219,8 @@ const BlogList = () => {
                                     name="title"
                                     type="text"
                                     placeholder="Enter the Blog Title."
+                                    onBlur={formik.handleBlur}
                                 />
-                                {formik.touched && formik.errors.title ? (
-                                    <div className="text-sm mt-1 font-medium text-red-500">
-                                        {formik.errors.title}
-                                    </div>
-                                ) : null}
                             </div>
                             <div>
                                 <Label className="mb-2" htmlFor="date">
@@ -203,12 +233,8 @@ const BlogList = () => {
                                     name="date"
                                     type="text"
                                     placeholder="Enter the Blog Title."
+                                    onBlur={formik.handleBlur}
                                 />
-                                {formik.touched && formik.errors.date ? (
-                                    <div className="text-sm mt-1 font-medium text-red-500">
-                                        {formik.errors.date}
-                                    </div>
-                                ) : null}
                             </div>
                         </div>
                         <div>
@@ -240,22 +266,33 @@ const BlogList = () => {
                                     />
                                 </label>
                             </div>
-                            {formik.values.imageUrl &&
-                                typeof formik.values.imageUrl !== "string" && (
+                            {formik.values.imageUrl && (
+                                typeof formik.values.imageUrl === "string" ? (
+                                    <img src={formik.values.imageUrl} alt="Preview" className="w-24 h-24 object-cover mt-2 rounded-md" />
+                                ) : (
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="font-medium">
-                                                {formik.values.imageUrl.name}
-                                            </p>
+                                            <p className="font-medium">{formik.values.imageUrl.name}</p>
                                             <p className="text-sm text-muted-foreground">
                                                 {(formik.values.imageUrl.size / 1024).toFixed(2)} KB
                                             </p>
                                         </div>
                                     </div>
-                                )}
+                                )
+                            )}
                         </div>
-                        <Button disabled={isPending} className="my-4 py-4 rounded-md w-full" type="submit">
-                            {isPending ? "creating..." : "Create"}
+                        <Button
+                            disabled={isPending || updatePending}
+                            className="my-4 py-4 rounded-md w-full"
+                            type="submit"
+                        >
+                            {openEditDialog
+                                ? updatePending
+                                    ? "Updating..."
+                                    : "Update"
+                                : isPending
+                                    ? "Creating..."
+                                    : "Create"}
                         </Button>
                     </form>
                 </CommonDialog>

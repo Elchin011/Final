@@ -6,7 +6,7 @@ const {
   authProtectMiddleware,
 } = require("../middleware/authProtectMiddleware");
 
-const { getAllBlogs, createBlog, deleteBlog, getBlogById } = require("../controllers/BlogController");
+const { getAllBlogs, createBlog, deleteBlog, getBlogById, updateBlog } = require("../controllers/BlogController");
 const upload = multer({ storage: storage });
 const router = express.Router();
 
@@ -14,6 +14,7 @@ const router = express.Router();
 
 router.get("/", authProtectMiddleware, getAllBlogs);
 router.post("/create", upload.single("file"), createBlog);
+router.patch("/:id", upload.single("file"), updateBlog);
 router.delete("/:id", deleteBlog);
 router.get("/:id", getBlogById);
 

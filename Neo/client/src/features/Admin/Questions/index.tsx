@@ -64,7 +64,7 @@ const QuestionsList = () => {
                 Actions: (
                     <div className="flex items-center gap-2">
                         <Button
-                            className="bg-red-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-red-600 hover:text-white duration-300"
+                            className="bg-red-500 text-white p-1.5 px-2.5 rounded-md hover:bg-red-600 hover:text-white duration-300"
                             variant="outline"
                             onClick={() => {
                                 if (confirm("Are you sure you want to delete this blog?")) {
