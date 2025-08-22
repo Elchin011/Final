@@ -75,9 +75,32 @@ const deleteBlog = async (req, res) => {
   });
 };
 
+const updateBlog = async (req, res) => {
+  const { id } = req.params;
+  const { title, date } = req.body;
+
+  try {
+    const updatedBlog = await BlogSchema.findByIdAndUpdate(
+      id,
+      { title, date, imageUrl: req.file ? req.file.path : undefined },
+      { new: true }
+    );
+
+    if (!updatedBlog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    return res.status(200).json({ data: updatedBlog });
+  } catch (error) {
+    console.error("Error in updateBlog:", error);
+    return res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 module.exports = {
     getAllBlogs,
     createBlog,
     deleteBlog,
+    updateBlog,
     getBlogById
 };

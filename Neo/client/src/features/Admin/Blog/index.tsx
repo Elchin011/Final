@@ -13,7 +13,7 @@ import {
 import { QueryKeys } from "@/constants/QueryKeys";
 import { BasicTable } from "@/features/common/BasicTable";
 import { CommonDialog } from "@/features/common/Dialog";
-import { deleteApi, getAPi, postApi } from "@/http/api";
+import { deleteApi, getAPi, patchProductApi, postApi } from "@/http/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { Pencil, Trash2, UploadIcon } from "lucide-react";
@@ -23,6 +23,7 @@ import * as yup from "yup";
 
 const BlogList = () => {
     const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
+    const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
     const { data, isLoading, isError, error, refetch } = useQuery({
         queryKey: QueryKeys.blogs.All,
         queryFn: async () => {
@@ -57,6 +58,21 @@ const BlogList = () => {
         mutationFn: async (id: string) => await deleteApi(`/blogs/${id}`),
         onSuccess: () => {
             refetch();
+        },
+    });
+
+    const {
+        mutate: updateBlog,
+        isPending: updatePending,
+    } = useMutation({
+
+        mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
+            return patchProductApi(`/blogs/${id}`, formData);
+        },
+        onSuccess: () => {
+            formik.resetForm();
+            refetch();
+            setOpenEditDialog(false);
         },
     });
 
