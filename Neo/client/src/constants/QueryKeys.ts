@@ -39,5 +39,9 @@ export const QueryKeys = {
     questions: {
         All: ["All_questions"],
         createQuestion: ["create-question"]
+    },
+    coupons: {
+        All: ["All_coupons"],
+        createCoupon: ["create-coupon"]
     }
 };

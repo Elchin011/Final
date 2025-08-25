@@ -69,6 +69,11 @@ const items = [
         url: "/admin/appointments",
         icon: Settings,
     },
+    {
+        title: "Coupons",
+        url: "/admin/coupons",
+        icon: Settings,
+    },
     
 ]
 

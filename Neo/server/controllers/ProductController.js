@@ -440,43 +440,68 @@ const getProductById = async (req, res) => {
 };
 
 const createOrder = async (req, res) => {
-  const { user, products, totalAmount, status, address, firstName, lastname, email, phone } = req.body;
   try {
+    const {
+      user,
+      products,
+      totalAmount,
+      discount = 0,
+      status = "pending",
+      address,
+      firstName,
+      lastname,
+      email,
+      phone,
+    } = req.body;
+
+    if (!user || !products || !Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({ message: "User and products are required" });
+    }
+
+    if (!totalAmount || isNaN(Number(totalAmount))) {
+      return res.status(400).json({ message: "Total amount is required and must be a number" });
+    }
+
+    const finalPrice = Number(totalAmount) - Number(discount);
+
+    // User yoxla
     const foundUser = await UserSchema.findById(user);
-    if (!foundUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const productIds = products.map((product) => product.product);
-    const foundProducts = await ProductSchema.find({
-      _id: { $in: productIds },
-    });
+    if (!foundUser) return res.status(404).json({ message: "User not found" });
+
+    // Products yoxla
+    const productIds = products.map(p => p.product);
+    const foundProducts = await ProductSchema.find({ _id: { $in: productIds } });
     if (!foundProducts || foundProducts.length !== productIds.length) {
-      return res
-        .status(404)
-        .json({ message: "One or more products not found" });
+      return res.status(404).json({ message: "One or more products not found" });
     }
+
+    // Yeni order yarat
     const newOrder = new OrderSchema({
-      user: user,
-      products: products,
-      totalAmount: totalAmount,
-      status: status || "pending",
-      address: address,
-      firstName: firstName,
-      lastname: lastname,
-      email: email,
-      phone: phone,
+      user,
+      products,
+      totalAmount: Number(totalAmount),
+      discount: Number(discount),
+      finalPrice,
+      status,
+      address,
+      firstName,
+      lastname,
+      email,
+      phone,
     });
+
     await newOrder.save();
+
     return res.status(201).json({
       message: "Order created successfully",
       data: newOrder,
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ message: "Server error", error: err.message });
+    console.error("CreateOrder error:", err);
+    return res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 
 const deleteOrder = async (req, res) => {
   const { id } = req.params;

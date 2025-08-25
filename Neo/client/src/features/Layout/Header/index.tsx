@@ -348,7 +348,7 @@ export const Header = () => {
             </div>
             <div>
 
-              <div className="relative block lg:hidden">
+              <div className="relative block pt-2 lg:hidden">
                 {/* Menu Button */}
                 <button onClick={() => setOpenMenu(true)}>
                   <Menu strokeWidth={1} className="w-6 h-6" />

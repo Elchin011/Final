@@ -13,7 +13,7 @@ import {
 import { QueryKeys } from "@/constants/QueryKeys";
 import { BasicTable } from "@/features/common/BasicTable";
 import { CommonDialog } from "@/features/common/Dialog";
-import { deleteApi, getAPi, postApi } from "@/http/api";
+import { deleteApi, getAPi, patchProductApi, postApi } from "@/http/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { Pencil, Trash2, UploadIcon } from "lucide-react";
@@ -22,6 +22,12 @@ import * as yup from "yup";
 
 const ServiceLevelsList = () => {
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+
+  const [editServiceLevel, setEditServiceLevel] = useState<any>(null);
+
+
+
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: QueryKeys.serviceLevels.All,
     queryFn: async () => {
@@ -59,6 +65,56 @@ const ServiceLevelsList = () => {
     },
   });
 
+  const {
+    mutate: updateServiceLevels,
+    isPending: updatePending,
+  } = useMutation({
+    mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
+      return patchProductApi(`/service-levels/${id}`, formData);
+    },
+    onSuccess: () => {
+      formik.resetForm();
+      refetch();
+      setOpenAddDialog(false);
+      setEditServiceLevel(null);
+    },
+  });
+
+
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      name: editServiceLevel ? editServiceLevel.name : "",
+      price: editServiceLevel ? editServiceLevel.price : 0,
+      imageUrl: editServiceLevel ? editServiceLevel.imageUrl : "" as string | File,
+    },
+    validationSchema: yup.object({
+      name: yup.string().required("Name is required"),
+      price: yup.number().required("Price is required").min(0, "Price must be a positive number"),
+    }),
+    onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append("name", values.name);
+      if (values.imageUrl && typeof values.imageUrl !== "string") {
+        formData.append("file", values.imageUrl);
+      }
+      formData.append("price", values.price.toString());
+      if (editServiceLevel) {
+        updateServiceLevels({ id: editServiceLevel._id, formData });
+      } else {
+        mutate(formData);
+      }
+    },
+  });
+
+
+  const handleEditClick = (serviceLevels: any) => {
+    setEditServiceLevel(serviceLevels);
+    setOpenAddDialog(true);
+  };
+
+
+
   const columns = ["Id", "Name", "Price", "Image", "Actions"];
 
   const rows =
@@ -82,6 +138,9 @@ const ServiceLevelsList = () => {
             <Button
               className="bg-blue-500 text-[14px] text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white duration-300"
               variant="outline"
+              onClick={() => {
+                handleEditClick(item);
+              }}
             >
               <Pencil />
             </Button>
@@ -100,28 +159,9 @@ const ServiceLevelsList = () => {
         ),
       };
     });
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      imageUrl: "" as string | File,
-      price: "",
-    },
-    validationSchema: yup.object({
-      name: yup.string().required("Size is required"),
-      price: yup.number().required("Price is required").min(0, "Price must be positive"),
-    }),
-    onSubmit: async (values) => {
-      console.log(values);
-      const formData = new FormData();
-      formData.append("name", values?.name ?? "");
-      formData.append("file", values?.imageUrl ?? "");
-      formData.append("price", values?.price ?? "");
-      mutate(formData);
-      // mutate({
-      //     name: values?.name ?? ""
-      // })
-    },
-  });
+
+
+
 
   return (
     <div>
@@ -131,19 +171,24 @@ const ServiceLevelsList = () => {
           className="bg-green-500 text-white p-1.5 px-2.5 rounded-md hover:bg-green-600 hover:text-white duration-300"
           onClick={() => {
             setOpenAddDialog(true);
+            setEditServiceLevel(null);
+            formik.resetForm();
           }}
         >
           Add Service Level
         </Button>
       </div>
       <BasicTable cols={columns} rows={rows} isLoading={isLoading} />
-      {openAddDialog && (
+      {(openAddDialog || openEditDialog) && (
         <CommonDialog
-          open={openAddDialog}
+          open={openAddDialog || openEditDialog}
           onClose={() => {
             setOpenAddDialog(false);
+            setOpenEditDialog(false);
+            setEditServiceLevel(null);
+            formik.resetForm();
           }}
-          title="Create Service Level"
+          title={openEditDialog ? "Edit Service Level" : "Add Service Level"}
         >
           <form
             onSubmit={(e: any) => {
@@ -168,12 +213,8 @@ const ServiceLevelsList = () => {
                   name="name"
                   type="text"
                   placeholder="Enter the Product Name."
+                  onBlur={formik.handleBlur}
                 />
-                {formik.touched && formik.errors.name ? (
-                  <div className="text-sm mt-1 font-medium text-red-500">
-                    {formik.errors.name}
-                  </div>
-                ) : null}
               </div>
               <div>
                 <Label className="mb-2" htmlFor="price">
@@ -186,12 +227,9 @@ const ServiceLevelsList = () => {
                   name="price"
                   type="number"
                   placeholder="Enter the Price"
+                  onBlur={formik.handleBlur}
                 />
-                {formik.touched && formik.errors.price ? (
-                  <div className="text-sm mt-1 font-medium text-red-500">
-                    {formik.errors.price}
-                  </div>
-                ) : null}
+
               </div>
             </div>
             <div>
@@ -223,22 +261,33 @@ const ServiceLevelsList = () => {
                   />
                 </label>
               </div>
-              {formik.values.imageUrl &&
-                typeof formik.values.imageUrl !== "string" && (
+              {formik.values.imageUrl && (
+                typeof formik.values.imageUrl === "string" ? (
+                  <img src={formik.values.imageUrl} alt="Preview" className="w-24 h-24 object-cover mt-2 rounded-md" />
+                ) : (
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">
-                        {formik.values.imageUrl.name}
-                      </p>
+                      <p className="font-medium">{formik.values.imageUrl.name}</p>
                       <p className="text-sm text-muted-foreground">
                         {(formik.values.imageUrl.size / 1024).toFixed(2)} KB
                       </p>
                     </div>
                   </div>
-                )}
+                )
+              )}
             </div>
-            <Button disabled={isPending} className="my-4 py-4 rounded-md w-full" type="submit">
-              {isPending ? "creating..." : "Create"}
+            <Button
+              disabled={isPending || updatePending}
+              className="my-4 py-4 rounded-md w-full"
+              type="submit"
+            >
+              {editServiceLevel
+                ? updatePending
+                  ? "Updating..."
+                  : "Update"
+                : isPending
+                  ? "Creating..."
+                  : "Create"}
             </Button>
           </form>
         </CommonDialog>

@@ -1,5 +1,3 @@
-
-
 const ServiceLevelsSchema = require("../models/ServiceLevels/ServiceLevelsSchema");
 
 const getAllServiceLevels = async (req, res) => {
@@ -11,14 +9,13 @@ const getAllServiceLevels = async (req, res) => {
     return res.status(200).json({ data: serviceLevels });
   } catch (error) {
     console.error("Error in getAllServiceLevels:", error);
-    return res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
-
 const createServiceLevels = async (req, res) => {
-
-
   if (!req.file) {
     return res.status(400).json({
       message: "Image file is required",
@@ -44,7 +41,6 @@ const createServiceLevels = async (req, res) => {
   });
 };
 
-
 const deleteServiceLevels = async (req, res) => {
   const { id } = req.params;
 
@@ -59,8 +55,35 @@ const deleteServiceLevels = async (req, res) => {
   });
 };
 
+const updateServiceLevels = async (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+
+  const serviceLevel = await ServiceLevelsSchema.findByIdAndUpdate(
+    id,
+    {
+      name: name,
+      price: price,
+      imageUrl: req.file ? req.file.path : undefined,
+    },
+    { new: true }
+  );
+
+  if (!serviceLevel) {
+    return res.status(404).json({
+      message: "Service not found",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Service updated successfully",
+    data: serviceLevel,
+  });
+};
+
 module.exports = {
-    getAllServiceLevels,
-    createServiceLevels,
-    deleteServiceLevels
+  getAllServiceLevels,
+  createServiceLevels,
+  deleteServiceLevels,
+  updateServiceLevels,
 };

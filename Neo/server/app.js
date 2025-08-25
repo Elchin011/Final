@@ -8,6 +8,8 @@ const ServiceLevelsRouter=require("./routers/ServiceLevelsRouter")
 const BlogRouter=require("./routers/BlogRouter")
 const QuestionsRouter=require("./routers/QuestionsRouter")
 const AppointmentRouter=require("./routers/AppointmentRouter")
+const CuponRouter=require("./routers/CuponRouter")
+
 
 
 
@@ -34,6 +36,8 @@ app.use("/api/service-levels", ServiceLevelsRouter);
 app.use("/api/blogs", BlogRouter)
 app.use("/api/questions", QuestionsRouter);
 app.use("/api/appointments", AppointmentRouter);
+app.use("/api/coupons", CuponRouter);
+
 
 
 app.listen(PORT,()=>{

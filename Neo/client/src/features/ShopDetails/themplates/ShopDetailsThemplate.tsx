@@ -11,7 +11,6 @@ const ShopDetailsThemplate = () => {
 
 
 
-
   return (
     <div>
       <HeroBanner />

@@ -43,9 +43,9 @@ const ProductId = () => {
     const decreaseQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
     return (
-        <div className="container mx-auto mt-32.5">
+        <div className="container mx-auto mt-32.5 px-10 md:px-5 lg:px-0">
             {data && (
-                <div className="grid grid-cols-12 gap-10 object-cover" key={data.data._id || data.data.id}>
+                <div className="grid lg:grid-cols-12 grid-cols-1 gap-10 object-cover" key={data.data._id || data.data.id}>
                    
                     <div className="col-span-7">
                         <img className="w-full object-cover" src={data.data.imageUrl} alt={data.data.name} />
@@ -60,8 +60,8 @@ const ProductId = () => {
                             Orci ac auctor augue mauris augue.
                         </p>
 
-                        
-                        <div className="flex items-center gap-6 pr-5 mt-[31px]">
+
+                        <div className="hidden lg:flex items-center gap-6 pr-5 mt-[31px]">
                             <div className="flex items-center gap-5 w-45 border border-gray-100">
                                 <button
                                     className="border-none p-5"

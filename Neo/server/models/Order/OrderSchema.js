@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const OrderSchema = new mongoose.Schema(
+const OrderSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +24,14 @@ const OrderSchema = new mongoose.Schema(
     totalAmount: {
       type: Number,
       required: true,
+    },
+    discount: {
+      type: Number,
+      default: 0, // kupon endirimi üçün
+    },
+    finalPrice: {
+      type: Number,
+      default: null, // endirim tətbiq olunanda final qiymət
     },
     status: {
       type: String,

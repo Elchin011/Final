@@ -22,11 +22,11 @@ const Products = () => {
     const {addToCart} = useCart();
 
     return (
-        <div className='container mx-auto mb-[125px] mt-[103px]'>
+        <div className='container mx-auto mb-[125px] mt-[83px] px-10 md:px-5 lg:px-0'>
             <h1 className='text-4xl font-semibold text-center tracking-[0.36px] uppercase text-[#1c1c1c] mb-[62px]'>Related products</h1>
-            <div className='grid grid-cols-4 gap-10'>
+            <div className='grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-10'>
                 {data &&
-                    data?.data?.slice(6,10).map((item: any, idx: number) => (
+                    data?.data?.slice(0,4).map((item: any, idx: number) => (
                         console.log(item),
                         <ShopCard
                             id={item?._id}

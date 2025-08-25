@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Check } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 
 const RelifForm = () => {
@@ -53,7 +54,9 @@ const RelifForm = () => {
                                 <p className='text-[#565656] text-[16px]'>mail: neoocular@qodeinteractive.com</p>
                                 <p className='text-[#565656] text-[16px]'>tel: (+971) 204 2033 6611</p>
                             </div>
-                            <Button className='py-3.5 px-10 bg-[#1c1c1c] text-white uppercase text-[13px] font-medium w-[200px] tracking-[0.1rem] hover:bg-black duration-300'>Appointment</Button>
+                            <Button className='py-3.5 px-10 bg-[#1c1c1c] text-white uppercase text-[13px] font-medium w-[200px] tracking-[0.1rem] hover:bg-black duration-300'>
+                                <Link href='/bkappointment'>Appointment</Link>
+                            </Button>
                         </div>
 
                     </div>

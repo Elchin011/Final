@@ -19,8 +19,9 @@ const ShopDetailsHeroBanner = () => {
   const productName = data?.data?.name || "Loading...";
 
   return (
-    <div className="relative">
+    <div className="relative h-45">
       <img
+        className='w-full h-45 object-cover'
         src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/shop-Title-img.jpg"
         alt="Banner"
       />

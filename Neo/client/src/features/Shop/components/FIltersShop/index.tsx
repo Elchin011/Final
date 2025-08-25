@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { ShopCard } from '../../common/ShopCard';
 import { useCart } from '@/Providers/CartProvider';
 import toast from 'react-hot-toast';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 
 const FiltersShop = () => {
     const user =
@@ -16,10 +16,12 @@ const FiltersShop = () => {
 
     const [selectProductCategory, setSelectProductCategory] = useState("");
     const [selectProductColor, setSelectProductColor] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchInput, setSearchInput] = useState("");
     const [selectProductSize, setSelectProductSize] = useState("");
     const [page, setPage] = useState(1);
 
-    const perPage = 6; 
+    const perPage = 6;
 
     const { data, isLoading, isError } = useQuery({
         queryKey: [QueryKeys.products.All, selectProductCategory, selectProductColor, selectProductSize],
@@ -44,15 +46,23 @@ const FiltersShop = () => {
 
     const allProducts = data?.data || [];
 
-    // Filter varsa bütün uyğun məhsullar
-    const filteredProducts =
-        selectProductCategory || selectProductColor || selectProductSize
-            ? allProducts
-            : allProducts;
 
+
+
+    let filteredProducts = allProducts;
+
+   
+    if (searchTerm) {
+        filteredProducts = filteredProducts.filter((product: any) =>
+            product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }
+
+    
     const totalPages = Math.ceil(filteredProducts.length / perPage);
-
     const productsToShow = filteredProducts.slice((page - 1) * perPage, page * perPage);
+
+
 
     const { addToCart } = useCart();
 
@@ -69,9 +79,8 @@ const FiltersShop = () => {
 
     return (
         <div className='container mx-auto mt-32.5 mb-31.5'>
-            <div className='grid grid-cols-12 gap-10'>
-                {/* Filtrlər */}
-                <div className='col-span-3'>
+            <div className='grid grid-cols-12 gap-10 '>
+                <div className='lg:col-span-3 px-10 lg:px-0 col-span-12'>
                     <div className='flex flex-col gap-15'>
                         <div>
                             <h4 className='text-[17px] font-semibold uppercase tracking-[0.34px] mb-5'>Product categories</h4>
@@ -115,17 +124,34 @@ const FiltersShop = () => {
                                 ))}
                             </div>
                         </div>
+                        <div>
+                            <img className='object-cover w-full' src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/08/shop-banner-1024x690.jpg" alt="" />
+                        </div>
                     </div>
                 </div>
 
-                {/* Məhsullar */}
-                <div className='col-span-9'>
-                    <div className='grid grid-cols-3 gap-10'>
-                        {isError ? (
-                            <div className='col-span-3 text-center text-red-500'>
-                                Error loading products
-                            </div>
-                        ) : productsToShow.length > 0 ? (
+
+                <div className='lg:col-span-9 col-span-12 px-10 lg:px-0'>
+
+                    <p className='text-[16px] font-semibold uppercase tracking-[0.34px] mb-8'>Showing 1 – 6 of {filteredProducts.length} results</p>
+
+                    <div className="border flex items-center justify-between border-gray-300 overflow-hidden mb-13.5">
+                        <input
+                            type="text"
+                            id="search"
+                            placeholder="Search products..."
+                            className="w-[90%] border border-none text-sm py-3 px-3 focus:outline-none "
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                        />
+                        <button
+                            onClick={() => setSearchTerm(searchInput)}
+                            className="px-4 py-2.5 bg-black flex justify-center items-center text-white">
+                                <Search/>
+                        </button>
+                    </div>
+                    <div className='grid lg:grid-cols-3 grid-cols-1 gap-10'>
+                        {productsToShow.length > 0 ? (
                             productsToShow.map((item: any) => (
                                 <ShopCard
                                     key={item._id}
@@ -149,7 +175,7 @@ const FiltersShop = () => {
                         )}
                     </div>
 
-                    {/* Pagination */}
+                    
                     {totalPages > 1 && (
                         <div className="flex justify-center items-center gap-4 mt-17.5">
                             <button

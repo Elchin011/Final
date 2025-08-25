@@ -2,9 +2,9 @@ import React from 'react'
 
 const ShopServices = () => {
     return (
-        <div className='bg-[#f9f9f9] py-18'>
+        <div className='bg-[#f9f9f9] lg:px-0 px-10 py-18'>
             <div className='container mx-auto text-center'>
-                <div className='grid grid-cols-4 gap-10'>
+                <div className='grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-10'>
                     <div className='flex gap-3 items-center'>
                         <div className='pt-6'>
                             <img className='h-[46px]' src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-01.png" alt="" />

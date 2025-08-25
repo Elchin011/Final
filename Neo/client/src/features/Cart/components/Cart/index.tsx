@@ -73,39 +73,11 @@ export default function CartPage() {
 
   return (
     <div>
-      {/* Header Section */}
-      <div className="relative">
-        <img
-          className="h-[155px] object-cover"
-          src="https://neoocular.qodeinteractive.com/wp-content/uploads/2021/08/Whislist-cart-title-img.jpg"
-          alt="Cart Banner"
-        />
-        <div className="absolute top-1/2 left-[95px]">
-          <div className="text-[15px] text-white mb-6 flex items-center gap-2">
-            <li className="list-none">
-              <Link
-                href="/"
-                className="text-white transition mb-3.5 text-[15px] relative group cursor-pointer"
-              >
-                Home
-                <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-white transition-all duration-400 group-hover:w-full"></span>
-              </Link>
-            </li>
-            /
-            <p>
-              <Link href="/cart">Cart</Link>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Cart Items Section */}
       <div className="container mx-auto pt-14 pb-35">
         <div className="mt-10 flex flex-col xl:flex-row justify-center items-stretch w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
           <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
             {data && data.length > 0 ? (
               <>
-                {/* Table Header */}
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center">
                     <p className="text-[17px] md:text-[17px] ml-[215px] dark:text-white font-semibold uppercase">
@@ -122,8 +94,6 @@ export default function CartPage() {
                     Subtotal
                   </p>
                 </div>
-
-                {/* Cart Items */}
                 {data.map((item: any, idx: number) => (
                   <div
                     key={idx}
@@ -166,8 +136,6 @@ export default function CartPage() {
                     </div>
                   </div>
                 ))}
-
-                {/* Coupon */}
                 <div className="mt-4 flex gap-2">
                   <input
                     type="text"
@@ -181,8 +149,6 @@ export default function CartPage() {
                   </button>
                 </div>
                 {message && <p className="mt-2 text-green-600">{message}</p>}
-
-                {/* Totals */}
                 <div className="mt-20 w-full">
                   <h3 className="text-[30px] dark:text-white font-semibold uppercase mb-7.5">
                     Cart Totals
@@ -225,31 +191,6 @@ export default function CartPage() {
                 </Link>
               </div>
             )}
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Info Section */}
-      <div className="bg-[#f9f9f9] py-18 px-9 lg:px-0">
-        <div className="container mx-auto text-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:gap-10 gap-2">
-            {/* Info Items */}
-            {[
-              { img: "https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-01.png", title: "Free shipping 100$", desc: "Lorem ipsum dolor in" },
-              { img: "https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-02.png", title: "Helpdesk center", desc: "Nunc amet volutpat sed" },
-              { img: "https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-03.png", title: "60 days to try out", desc: "Sit amet placerat do" },
-              { img: "https://neoocular.qodeinteractive.com/wp-content/uploads/2021/07/Content-bottom-icon-04.png", title: "100% safe payment", desc: "Non tellus orci auctor" },
-            ].map((item, idx) => (
-              <div key={idx} className="flex gap-3 items-center">
-                <div className="pt-6">
-                  <img className="h-[46px]" src={item.img} alt={item.title} />
-                </div>
-                <div className="text-left">
-                  <h4 className="uppercase mt-7 text-[15px] font-semibold text-[#606060] tracking-[1px]">{item.title}</h4>
-                  <p className="text-[16px] text-[#565656]">{item.desc}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

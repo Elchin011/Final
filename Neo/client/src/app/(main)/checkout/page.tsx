@@ -22,6 +22,22 @@ export default function CheckoutPage() {
   const cartItems = getCartItems();
   const totalAmount = getTotalPrice();
 
+  const [discount, setDiscount] = useState(0);
+  const [finalTotal, setFinalTotal] = useState(totalAmount);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedDiscount = Number(localStorage.getItem("discountedTotal") || 0);
+      if (storedDiscount > 0) {
+        setDiscount(totalAmount - storedDiscount); // real endirim məbləği
+        setFinalTotal(storedDiscount); // final qiymət
+      } else {
+        setDiscount(0);
+        setFinalTotal(totalAmount);
+      }
+    }
+  }, [totalAmount]);
+
   const {
     mutate,
     isPending,
@@ -49,7 +65,7 @@ export default function CheckoutPage() {
           product: item.id,
           quantity: item.quantity,
         })),
-        totalAmount,
+        totalAmount: finalTotal,
         address,
         firstName,
         lastname,
@@ -66,45 +82,45 @@ export default function CheckoutPage() {
   };
 
 
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-  );
+  // const stripePromise = loadStripe(
+  //   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+  // );
 
   const data = getCartItems();
 
-  const handleCheckout = async () => {
-    const stripe = await stripePromise;
-    if (!stripe) {
-      console.error("Stripe not loaded");
-      return;
-    }
-    const response = await fetch("/api/checkout-sessions/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        cartItems: data.map((item: any) => ({
-          name: item.name,
-          image: item.imageUrl,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-        returnUrl: window.location.origin,
-      }),
-    });
-    if (!response.ok) {
-      console.error("Failed to create checkout session");
-      return;
-    }
-    const session = await response.json();
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.sessionId,
-    });
-    if (result.error) {
-      console.error("Stripe checkout error:", result.error.message);
-    }
-  };
+  // const handleCheckout = async () => {
+  //   const stripe = await stripePromise;
+  //   if (!stripe) {
+  //     console.error("Stripe not loaded");
+  //     return;
+  //   }
+  //   const response = await fetch("/api/checkout-sessions/create", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       cartItems: data.map((item: any) => ({
+  //         name: item.name,
+  //         image: item.imageUrl,
+  //         price: item.price,
+  //         quantity: item.quantity,
+  //       })),
+  //       returnUrl: window.location.origin,
+  //     }),
+  //   });
+  //   if (!response.ok) {
+  //     console.error("Failed to create checkout session");
+  //     return;
+  //   }
+  //   const session = await response.json();
+  //   const result = await stripe.redirectToCheckout({
+  //     sessionId: session.sessionId,
+  //   });
+  //   if (result.error) {
+  //     console.error("Stripe checkout error:", result.error.message);
+  //   }
+  // };
 
   return (
     <div className="container mx-auto px-4 mt-25 py-8">
@@ -192,15 +208,23 @@ export default function CheckoutPage() {
                 ))}
               </ul>
               <div className="font-bold flex justify-between py-9">
-                <span className="font-semibold text-[17px] text-[#1c1c1c] tracking-[0.3px] uppercase">Total</span>
+                <span className="font-semibold text-[17px] text-[#1c1c1c] tracking-[0.3px] uppercase">Subtotal</span>
                 <span className="pr-58">${totalAmount.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between py-9">
+                <span className="font-semibold text-[17px] text-[#1c1c1c] tracking-[0.3px] uppercase">Discount</span>
+                <span className="text-green-600 pr-58">{discount > 0 ? `${discount} $` : "0 $"}</span>
+              </div>
+              <div className="font-bold flex justify-between py-9">
+                <span className="font-semibold text-[17px] text-[#1c1c1c] tracking-[0.3px] uppercase">Total</span>
+                <span className="pr-58">${finalTotal.toFixed(2)}</span>
               </div>
             </div>
             {error && <div className="text-red-600">{error}</div>}
             <button
               type="submit"
               className="text-[13px] font-medium uppercase tracking-[1.95px] hover:bg-black hover:text-white duration-400 bg-transparent text-black py-4.5 px-9  border border-black"
-              onClick={handleCheckout}
+            // onClick={handleCheckout}
             >
               {isPending ? "Processing..." : "Place Order"}
             </button>

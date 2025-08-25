@@ -4,7 +4,7 @@ import { getAPi } from "@/http/api";
 import { OrderStatus } from "@/lib/check-status";
 import { useCart } from "@/Providers/CartProvider";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const page = () => {
   const { getCartItems, getTotalPrice, clearCart } = useCart();
@@ -34,9 +34,16 @@ const page = () => {
     );
   }
 
-  if (isLoading) return <div className="flex justify-center items-center h-screen">
-    <img className='w-20 h-10' src="https://raw.githubusercontent.com/Codelessly/FlutterLoadingGIFs/master/packages/cupertino_activity_indicator_large.gif" alt="Loading..." />
-  </div>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <img
+          className="w-20 h-10"
+          src="https://raw.githubusercontent.com/Codelessly/FlutterLoadingGIFs/master/packages/cupertino_activity_indicator_large.gif"
+          alt="Loading..."
+        />
+      </div>
+    );
 
   return (
     <div>
@@ -45,6 +52,7 @@ const page = () => {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
           </div>
+
           {data && data?.data?.length > 0 ? (
             data?.data.map((order: any) => (
               <div key={order._id} className="mb-4 p-4 border rounded-md">
@@ -52,7 +60,8 @@ const page = () => {
                   Order ID: {order._id}
                 </h2>
                 <li className="list-none">
-                  <strong>Customer Name:</strong> {order.firstName} {order.lastname}
+                  <strong>Customer Name:</strong> {order.firstName}{" "}
+                  {order.lastname}
                 </li>
                 <li className="list-none">
                   <strong>Customer Email:</strong> {order.email}
@@ -60,11 +69,25 @@ const page = () => {
                 <li className="list-none">
                   <strong>Customer Phone:</strong> {order.phone}
                 </li>
+
                 <li className="list-none">
                   <strong>Total Amount:</strong> {order.totalAmount} $
                 </li>
+
+                {order.discount > 0 && (
+                  <>
+                    <li className="list-none text-green-600">
+                      <strong>Discount Applied:</strong> {order.discount} $
+                    </li>
+                    <li className="list-none text-green-700 font-semibold">
+                      <strong>Final Price:</strong> {order.finalPrice} $
+                    </li>
+                  </>
+                )}
+
                 <li className="list-none">
-                  <strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()}
+                  <strong>Date:</strong>{" "}
+                  {new Date(order.createdAt).toLocaleDateString()}
                 </li>
                 <li className="list-none">
                   <strong>Address:</strong> {order.address}
@@ -74,13 +97,25 @@ const page = () => {
                     <strong>Product:</strong>
                   </li>
                   {order.products.map((item: any, index: number) => (
-                    console.log(item.product),
-                    <li key={item.product?._id || item.product?.id || item.id || index}>
-                      {item.product?.name || "Unknown Product"} - {item.quantity} pcs
+                    <li
+                      key={
+                        item.product?._id ||
+                        item.product?.id ||
+                        item.id ||
+                        index
+                      }
+                    >
+                      {item.product?.name || "Unknown Product"} -{" "}
+                      {item.quantity} pcs
                     </li>
                   ))}
                 </ul>
-                <Button className={`mt-2 px-5 py-2 rounded-md ${OrderStatus(order.status)}`}>
+
+                <Button
+                  className={`mt-2 px-5 py-2 rounded-md ${OrderStatus(
+                    order.status
+                  )}`}
+                >
                   {order?.status}
                 </Button>
               </div>
